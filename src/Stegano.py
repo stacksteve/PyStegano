@@ -5,7 +5,7 @@ class Stegano:
     def __init__(self):
         self.seperator = "!#!SepSepSep!#!"
         self.seperator_binary = self.stringToBinary(self.seperator)
-        self.seperator_length = len(self.seperator)
+        self.seperator_length = len(self.seperator_binary)
 
     @staticmethod
     def stringToBinary(string: str):
@@ -35,7 +35,8 @@ class SteganoWriter(Stegano):
                 r, g, b, a = self.__getRGBAValues(i, bool(int(secret_message_bits_length[i])))
             else:
                 try:
-                    r, g, b, a = self.__getRGBAValues(i, bool(int(secret_message_bits[i])))
+                    r, g, b, a = self.__getRGBAValues(i, bool(
+                        int(secret_message_bits[i - len(secret_message_bits_length)])))  # start with Position 0
                 except IndexError:
                     r, g, b, a = self.__getRGBAValues(i, False)
             new_image_data.append((r, g, b, a))
@@ -116,6 +117,4 @@ class SteganoReader(Stegano):
         return temp
 
     def bitWasFlipped(self, i: int) -> bool:
-        orig = self.original_image_data[i][0]
-        steg = self.stegano_image_data[i][0]
         return bool(self.original_image_data[i][0] ^ self.stegano_image_data[i][0])

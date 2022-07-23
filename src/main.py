@@ -3,7 +3,7 @@ from Stegano import SteganoWriter, SteganoReader, Stegano
 
 def main():
     steg = SteganoWriter("steg.png", "stegged.png")
-    steg.placeSecretMessage("Hallo Welt")
+    steg.placeSecretMessage("H")
     stegged = SteganoReader("steg.png", "stegged.png")
     stegged.extractSecretMessage()
     print(stegged.extracted_message)
