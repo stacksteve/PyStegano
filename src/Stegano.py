@@ -8,11 +8,11 @@ class Stegano:
         self.seperator_length = len(self.seperator_binary)
 
     @staticmethod
-    def stringToBinary(string: str):
+    def stringToBinary(string: str) -> str:
         return "".join([format(ord(char), "08b") for char in string])
 
     @staticmethod
-    def binaryToString(binary: str):
+    def binaryToString(binary: str) -> str:
         # len(binary) // 8 -> divide into blocks of size 8
         return "".join(chr(int(binary[i * 8:i * 8 + 8], 2)) for i in range(len(binary) // 8))
 
