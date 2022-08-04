@@ -1,18 +1,18 @@
-from Stegano import Stegano
+# from Stegano import Stegano
 from SteganoWriter import SteganoWriter
 from SteganoReader import SteganoReader
 
 
 def main():
     # Place message
-    steg = SteganoWriter("desktop.png", "desktop_secret.png")
+    stegano_writing_machine = SteganoWriter("desktop.png", "desktop_secret.png")
     secret_message = str(input("Secret message: "))
-    steg.placeSecretMessage(secret_message)
+    stegano_writing_machine.placeSecretMessage(secret_message)
 
     # Extract message
-    stegged = SteganoReader("desktop.png", "desktop_secret.png")
-    stegged.extractSecretMessage()
-    print("Extracted message:", stegged.getExtractedMessage())
+    stegano_reading_machine = SteganoReader("desktop.png", "desktop_secret.png")
+    stegano_reading_machine.extractSecretMessage()
+    print("Extracted message:", stegano_reading_machine.getExtractedMessage())
 
 
 if __name__ == "__main__":
