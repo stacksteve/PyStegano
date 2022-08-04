@@ -23,7 +23,7 @@ class SteganoReader(Stegano):
         i = 0
         while seperator_begin == -1:
             temp_string += str(self.__bitWasFlipped(i))
-            if i % 50 == 0 and i >= self.seperator_length:
+            if i % 136 == 0 and i >= self.seperator_length:     # see performanceTest.py
                 seperator_position = temp_string.find(self.seperator_binary)
                 if seperator_position != -1:
                     seperator_begin = seperator_position
