@@ -20,15 +20,15 @@ class Stegano:
 class SteganoWriter(Stegano):
     def __init__(self, in_file_name: str, out_file_name: str):
         super().__init__()
-        self.rgba = Image.open(in_file_name).convert("RGBA")
-        self.image_data = self.rgba.getdata()
-        self.out_file_name = out_file_name
+        self.__rgba = Image.open(in_file_name).convert("RGBA")
+        self.__image_data = self.__rgba.getdata()
+        self.__out_file_name = out_file_name
 
     def placeSecretMessage(self, secret_message: str):
         secret_message_bits = self.stringToBinary(secret_message)
         secret_message_bits_length = self.__genMessageLengthBinaryString(len(secret_message_bits))
         new_image_data = []
-        for i, bit in enumerate(self.image_data):
+        for i, bit in enumerate(self.__image_data):
             if i < len(secret_message_bits_length):
                 r, g, b, a = self.__getRGBAValues(i, bool(int(secret_message_bits_length[i])))
             else:
@@ -45,37 +45,38 @@ class SteganoWriter(Stegano):
         return message_len_binary + self.seperator_binary
 
     def __getRGBAValues(self, i: int, flip_bit: bool) -> tuple:
-        return self.image_data[i][0] ^ (1 * flip_bit), \
-               self.image_data[i][1], \
-               self.image_data[i][2], \
-               self.image_data[i][3]
+        return self.__image_data[i][0] ^ (1 * flip_bit), \
+               self.__image_data[i][1], \
+               self.__image_data[i][2], \
+               self.__image_data[i][3]
 
     def __writeDataToFile(self, new_image_data):
-        self.rgba.putdata(new_image_data)
-        self.rgba.save(self.out_file_name)
+        self.__rgba.putdata(new_image_data)
+        self.__rgba.save(self.__out_file_name)
 
 
 class SteganoReader(Stegano):
     def __init__(self, original_image_path: str, stegano_image_path: str):
         super().__init__()
         # original image
-        original_image = Image.open(original_image_path)
-        self.original_rgba = original_image.convert("RGBA")
-        self.original_image_data = self.original_rgba.getdata()
+        self.__original_rgba = Image.open(original_image_path).convert("RGBA")
+        self.__original_image_data = self.__original_rgba.getdata()
 
         # stegano image
-        stegano_image = Image.open(stegano_image_path)
-        self.stegano_rgba = stegano_image.convert("RGBA")
-        self.stegano_image_data = self.stegano_rgba.getdata()
-        self.extracted_message = str()
+        self.__stegano_rgba = Image.open(stegano_image_path).convert("RGBA")
+        self.__stegano_image_data = self.__stegano_rgba.getdata()
+        self.__extracted_message = str()
 
-    def findSeperatorPosition(self) -> tuple:
+    def getExtractedMessage(self):
+        return self.__extracted_message
+
+    def __findSeperatorPosition(self) -> tuple:
         seperator_begin = -1
         temp_string = ""
         i = 0
         found_seperator = False
         while not found_seperator:
-            temp_string += str(self.bitWasFlipped(i))
+            temp_string += str(self.__bitWasFlipped(i))
             if i >= self.seperator_length:
                 seperator_position = temp_string.find(self.seperator_binary)
                 if seperator_position != -1:
@@ -84,19 +85,19 @@ class SteganoReader(Stegano):
             i += 1
         return seperator_begin, seperator_begin + self.seperator_length
 
-    def extractSecretMessageLength(self) -> tuple:
-        seperator_begin, seperator_end = self.findSeperatorPosition()
+    def __extractSecretMessageLength(self) -> tuple:
+        seperator_begin, seperator_end = self.__findSeperatorPosition()
         secret_message_length = ""
         for i in range(seperator_begin):
-            secret_message_length += str(self.bitWasFlipped(i))
+            secret_message_length += str(self.__bitWasFlipped(i))
         return int(self.binaryToString(secret_message_length)), seperator_end
 
     def extractSecretMessage(self):
         secret_message_bits = ""
-        secret_message_length, seperator_end = self.extractSecretMessageLength()
+        secret_message_length, seperator_end = self.__extractSecretMessageLength()
         for i in range(seperator_end, seperator_end + secret_message_length):
-            secret_message_bits += str(self.bitWasFlipped(i))
-        self.extracted_message = self.binaryToString(secret_message_bits)
+            secret_message_bits += str(self.__bitWasFlipped(i))
+        self.__extracted_message = self.binaryToString(secret_message_bits)
 
-    def bitWasFlipped(self, i: int) -> int:
-        return int(self.original_image_data[i][0] ^ self.stegano_image_data[i][0])
+    def __bitWasFlipped(self, i: int) -> int:
+        return self.__original_image_data[i][0] ^ self.__stegano_image_data[i][0]
