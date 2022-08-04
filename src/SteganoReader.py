@@ -17,7 +17,7 @@ class SteganoReader(Stegano):
     def getExtractedMessage(self):
         return self.__extracted_message
 
-    def __findSeperatorPosition(self) -> tuple:
+    def __findSeperatorPosition(self) -> int:
         seperator_begin = -1
         temp_string = ""
         i = 0
@@ -30,14 +30,15 @@ class SteganoReader(Stegano):
                     seperator_begin = seperator_position
                     found_seperator = True
             i += 1
-        return seperator_begin, seperator_begin + self.seperator_length
+        return seperator_begin
 
     def __extractSecretMessageLength(self) -> tuple:
-        seperator_begin, seperator_end = self.__findSeperatorPosition()
+        seperator_begin = self.__findSeperatorPosition()
+        assert seperator_begin != -1
         secret_message_length = ""
         for i in range(seperator_begin):
             secret_message_length += str(self.__bitWasFlipped(i))
-        return int(self.binaryToString(secret_message_length)), seperator_end
+        return int(self.binaryToString(secret_message_length)), seperator_begin + self.seperator_length
 
     def extractSecretMessage(self):
         secret_message_bits = ""
