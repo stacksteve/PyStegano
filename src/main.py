@@ -1,4 +1,6 @@
-from Stegano import SteganoWriter, SteganoReader, Stegano
+from Stegano import Stegano
+from SteganoWriter import SteganoWriter
+from SteganoReader import SteganoReader
 
 
 def main():
