@@ -5,11 +5,7 @@ from PIL import Image
 class SteganoReader(Stegano):
     def __init__(self, original_image_path: str, stegano_image_path: str):
         super().__init__()
-        # original image
-        self.__original_rgba = Image.open(original_image_path).convert("RGBA")
-        self.__original_image_data = self.__original_rgba.getdata()
-
-        # stegano image
+        self.__original_image_data = Image.open(original_image_path).convert("RGBA").getdata()
         self.__stegano_rgba = Image.open(stegano_image_path).convert("RGBA")
         self.__stegano_image_data = self.__stegano_rgba.getdata()
         self.__extracted_message = str()
