@@ -12,29 +12,18 @@ class SteganoWriter(Stegano):
     def placeSecretMessage(self, secret_message: str):
         secret_message_bits = self.stringToBinary(secret_message)
         secret_message_length = self.__genMessageLengthBinaryString(len(secret_message_bits))
-        new_image_data = self.__placeSecretMessageBitsLength(secret_message_length)
-        for i in range(len(secret_message_length), len(self.__image_data)):
-            try:
-                # start with Position 0
-                r, g, b, a = self.__getRgbaValues(i, int(secret_message_bits[i - len(secret_message_length)]))
-            except IndexError:
-                r, g, b, a = self.__getRgbaValues(i, False)
-            new_image_data.append((r, g, b, a))
+        full_secret_message = secret_message_length + secret_message_bits
+        new_image_data = []
+        for i in range(len(self.__image_data)):
+            new_image_data.append(self.__getRgbaValues(i, i < len(full_secret_message) and int(full_secret_message[i])))
         self.__writeDataToFile(new_image_data)
 
     def __genMessageLengthBinaryString(self, message_len: int) -> str:
         message_len_binary = self.stringToBinary(str(message_len))
         return message_len_binary + self.seperator_binary
 
-    def __placeSecretMessageBitsLength(self, secret_message_length: str):
-        new_image_data = []
-        for i in range(len(secret_message_length)):
-            r, g, b, a = self.__getRgbaValues(i, int(secret_message_length[i]))
-            new_image_data.append((r, g, b, a))
-        return new_image_data
-
-    def __getRgbaValues(self, i: int, flip_bit: int) -> tuple:
-        return self.__image_data[i][0] ^ (1 * flip_bit), \
+    def __getRgbaValues(self, i: int, flip_bit: bool) -> tuple:
+        return self.__image_data[i][0] ^ (1 and flip_bit), \
                self.__image_data[i][1], \
                self.__image_data[i][2], \
                self.__image_data[i][3]
