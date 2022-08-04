@@ -11,17 +11,14 @@ class SteganoWriter(Stegano):
 
     def placeSecretMessage(self, secret_message: str):
         secret_message_bits = self.stringToBinary(secret_message)
-        secret_message_bits_length = self.__genMessageLengthBinaryString(len(secret_message_bits))
-        new_image_data = []
-        for i, bit in enumerate(self.__image_data):
-            if i < len(secret_message_bits_length):
-                r, g, b, a = self.__getRGBAValues(i, bool(int(secret_message_bits_length[i])))
-            else:
-                try:
-                    r, g, b, a = self.__getRGBAValues(i, bool(
-                        int(secret_message_bits[i - len(secret_message_bits_length)])))  # start with Position 0
-                except IndexError:
-                    r, g, b, a = self.__getRGBAValues(i, False)
+        secret_message_length = self.__genMessageLengthBinaryString(len(secret_message_bits))
+        new_image_data = self.__placeSecretMessageBitsLength(secret_message_length)
+        for i in range(len(secret_message_length), len(self.__image_data)):
+            try:
+                # start with Position 0
+                r, g, b, a = self.__getRgbaValues(i, int(secret_message_bits[i - len(secret_message_length)]))
+            except IndexError:
+                r, g, b, a = self.__getRgbaValues(i, False)
             new_image_data.append((r, g, b, a))
         self.__writeDataToFile(new_image_data)
 
@@ -29,7 +26,14 @@ class SteganoWriter(Stegano):
         message_len_binary = self.stringToBinary(str(message_len))
         return message_len_binary + self.seperator_binary
 
-    def __getRGBAValues(self, i: int, flip_bit: bool) -> tuple:
+    def __placeSecretMessageBitsLength(self, secret_message_length: str):
+        new_image_data = []
+        for i in range(len(secret_message_length)):
+            r, g, b, a = self.__getRgbaValues(i, int(secret_message_length[i]))
+            new_image_data.append((r, g, b, a))
+        return new_image_data
+
+    def __getRgbaValues(self, i: int, flip_bit: int) -> tuple:
         return self.__image_data[i][0] ^ (1 * flip_bit), \
                self.__image_data[i][1], \
                self.__image_data[i][2], \
