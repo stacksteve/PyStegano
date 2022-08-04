@@ -21,14 +21,12 @@ class SteganoReader(Stegano):
         seperator_begin = -1
         temp_string = ""
         i = 0
-        found_seperator = False
-        while not found_seperator:
+        while seperator_begin == -1:
             temp_string += str(self.__bitWasFlipped(i))
-            if i >= self.seperator_length:
+            if i % 50 == 0 and i >= self.seperator_length:
                 seperator_position = temp_string.find(self.seperator_binary)
                 if seperator_position != -1:
                     seperator_begin = seperator_position
-                    found_seperator = True
             i += 1
         return seperator_begin
 
