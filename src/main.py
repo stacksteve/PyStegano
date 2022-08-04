@@ -10,7 +10,7 @@ def main():
     # Extract message
     stegged = SteganoReader("desktop.png", "desktop_secret.png")
     stegged.extractSecretMessage()
-    print("Extracted message:", stegged.extracted_message)
+    print("Extracted message:", stegged.getExtractedMessage())
 
 
 if __name__ == "__main__":
