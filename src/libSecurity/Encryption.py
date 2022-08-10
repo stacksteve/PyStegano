@@ -2,12 +2,20 @@ import json
 from base64 import b64encode, b64decode
 from Crypto.Cipher import AES
 from Crypto.Hash import SHA256
-# from Crypto.Random import get_random_bytes -> for later use with RSA encryption
+from Crypto.PublicKey import ECC
+# from Crypto.Random import get_random_bytes -> for later use with ECC encryption
 
 
 def getKey(key: str):
     hashing = SHA256.new(key.encode())
     return hashing.digest()
+
+
+def generateKeyPair(key_name: str):
+    private_key = ECC.generate(curve="ed25519")
+    public_key = private_key.public_key()
+    open(f"{key_name}_private.pem", "w").write(private_key.export_key(format="PEM"))
+    open(f"{key_name}_public.pem", "w").write(public_key.export_key(format="PEM"))
 
 
 def encryptMessage(message: str, key: str):
