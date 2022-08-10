@@ -1,5 +1,5 @@
 # from SteganoWriter import SteganoWriter
-from SteganoReader import SteganoReader
+from src.libStegano.SteganoReader import SteganoReader
 from time import time
 
 
