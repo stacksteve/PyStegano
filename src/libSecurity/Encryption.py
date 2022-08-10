@@ -2,8 +2,7 @@ import json
 from base64 import b64encode, b64decode
 from Crypto.Cipher import AES
 from Crypto.Hash import SHA256
-from Crypto.Protocol.KDF import PBKDF2
-from Crypto.Random import get_random_bytes
+# from Crypto.Random import get_random_bytes -> for later use with RSA encryption
 
 
 def getKey(key: str):
@@ -24,11 +23,3 @@ def decryptMessage(key: str, ciphertext: str, iv: str):
     ciphertext_bytes = b64decode(ciphertext)
     cipher = AES.new(getKey(key), AES.MODE_CFB, iv)
     return cipher.decrypt(ciphertext_bytes).decode()
-
-
-def intToBinary(integer: int) -> str:
-    digits = []
-    while integer > 0:
-        digits.insert(0, integer % 10)
-        integer //= 10
-    return "".join(format(digit + 48, "08b") for digit in digits)  # 48 to get char-value of '5'
