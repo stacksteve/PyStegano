@@ -1,4 +1,3 @@
-import json
 from base64 import b64encode, b64decode
 from Crypto.Cipher import AES, PKCS1_OAEP
 from Crypto.Hash import SHA3_256
