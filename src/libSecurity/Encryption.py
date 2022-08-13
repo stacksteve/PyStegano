@@ -1,8 +1,9 @@
-from base64 import b64encode, b64decode
 from Crypto.Cipher import AES, PKCS1_OAEP
 from Crypto.Hash import SHA3_256
 from Crypto.PublicKey import RSA
 from Crypto.Random import get_random_bytes
+
+seperator = "#########".encode()
 
 
 def generateKeyPair(key_name: str) -> None:
@@ -27,23 +28,18 @@ def decryptKey(private_key_receiver: RSA, encrypted_key: bytes) -> bytes:
 
 
 def getNewSymmetricEncryptionKey() -> bytes:
-    key = b64encode(get_random_bytes(32))
+    key = get_random_bytes(32)
     return SHA3_256.new(key).digest()
 
 
-def encryptMessage(message: str, public_key_receiver: RSA) -> dict:
+def encryptMessage(message: str, public_key_receiver: RSA):
     key = getNewSymmetricEncryptionKey()
     cipher = AES.new(key, AES.MODE_CFB)
     ciphertext_bytes = cipher.encrypt(message.encode())
-    return {
-        "ct": b64encode(ciphertext_bytes),
-        "iv": b64encode(cipher.iv),
-        "key": encryptKey(public_key_receiver, key)
-    }
+    return ciphertext_bytes + seperator + cipher.iv + seperator + encryptKey(public_key_receiver, key)
 
 
-def decryptMessage(ciphertext, iv, encrypted_key: bytes, private_key_receiver) -> str:
-    iv = b64decode(iv)
-    ciphertext_bytes = b64decode(ciphertext)
+def decryptMessage(encryption_bytes: bytes, private_key_receiver) -> str:
+    ciphertext_bytes, iv, encrypted_key = encryption_bytes.split(seperator)
     cipher = AES.new(decryptKey(private_key_receiver, encrypted_key), AES.MODE_CFB, iv)
     return cipher.decrypt(ciphertext_bytes).decode()
