@@ -1,7 +1,6 @@
 class Stegano:
     def __init__(self):
-        self.seperator = "#@&%$*+<>=^"
-        self.seperator_binary = self.stringToBinary(self.seperator)
+        self.seperator_binary = self.stringToBinary("#@&%$*+<>=^")
         self.seperator_length = len(self.seperator_binary)
 
     @staticmethod
