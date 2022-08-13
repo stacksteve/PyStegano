@@ -1,4 +1,5 @@
 from src.libStegano.Stegano import Stegano
+from src.libSecurity.Encryption import encryptMessage
 from PIL import Image
 
 
@@ -9,14 +10,20 @@ class SteganoWriter(Stegano):
         self.__image_data = self.__rgba.getdata()
         self.__out_file_name = out_file_name
 
-    def placeSecretMessage(self, secret_message: str):
-        secret_message_bits = self.stringToBinary(secret_message)
+    def placeSecretMessage(self, secret_message: str, public_key_receiver=None):
+        secret_message_bits = self.__getSecretMessageBits(secret_message, public_key_receiver)
         secret_message_length = self.__genMessageLengthBinaryString(len(secret_message_bits))
         full_secret_message = secret_message_length + secret_message_bits
         new_image_data = []
         for i in range(len(self.__image_data)):
             new_image_data.append(self.__getRgbaValues(i, i < len(full_secret_message) and int(full_secret_message[i])))
         self.__writeDataToFile(new_image_data)
+
+    def __getSecretMessageBits(self, secret_message: str, public_key_receiver):
+        if public_key_receiver:
+            return self.bytesToBinary(encryptMessage(secret_message, public_key_receiver))
+        else:
+            return self.stringToBinary(secret_message)
 
     def __genMessageLengthBinaryString(self, message_len: int) -> str:
         message_len_binary = self.stringToBinary(str(message_len))
