@@ -33,3 +33,9 @@ class Stegano:
     @staticmethod
     def binaryToInt(binary: str) -> int:
         return int(binary, 2)
+
+    @staticmethod
+    def bytesToBinary(byte_stream: bytes) -> str:
+        byte_seperator = Stegano.stringToBinary("#")
+        return "".join(Stegano.intToBinary(byte) + byte_seperator * (i != len(byte_stream) - 1)
+                       for i, byte in enumerate(byte_stream))
