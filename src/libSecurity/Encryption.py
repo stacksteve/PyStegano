@@ -12,8 +12,8 @@ def generateKeyPair(key_name: str) -> None:
     open(f"{key_name}_public.pem", "wb").write(public_key.export_key(format="PEM"))
 
 
-def importAsymmetricKey(path: str) -> RSA:
-    return RSA.import_key(open(path, "rb").read())
+def importAsymmetricKey(key_path: str) -> RSA:
+    return RSA.import_key(open(key_path, "rb").read())
 
 
 def encryptKey(public_key_receiver: RSA, key: bytes) -> bytes:
