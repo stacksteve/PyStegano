@@ -27,7 +27,7 @@ def decryptKey(private_key_receiver: RSA, encrypted_key: bytes) -> bytes:
 
 
 def getNewSymmetricEncryptionKey() -> bytes:
-    key = get_random_bytes(32)
+    key = b64encode(get_random_bytes(32))
     return SHA3_256.new(key).digest()
 
 
