@@ -12,16 +12,16 @@ def generateKeyPair(key_name: str) -> None:
     open(f"{key_name}_public.pem", "wb").write(public_key.export_key(format="PEM"))
 
 
-def importAsymmetricKey(path) -> RSA:
+def importAsymmetricKey(path: str) -> RSA:
     return RSA.import_key(open(path, "rb").read())
 
 
-def encryptKey(public_key_receiver, key) -> bytes:
+def encryptKey(public_key_receiver: RSA, key: bytes) -> bytes:
     cipher = PKCS1_OAEP.new(public_key_receiver)
     return cipher.encrypt(key)
 
 
-def decryptKey(private_key_receiver, encrypted_key) -> bytes:
+def decryptKey(private_key_receiver: RSA, encrypted_key: bytes) -> bytes:
     cipher = PKCS1_OAEP.new(private_key_receiver)
     return cipher.decrypt(encrypted_key)
 
@@ -31,7 +31,7 @@ def getNewSymmetricEncryptionKey() -> bytes:
     return SHA3_256.new(key).digest()
 
 
-def encryptMessage(message: str, public_key_receiver) -> dict:
+def encryptMessage(message: str, public_key_receiver: RSA) -> dict:
     key = getNewSymmetricEncryptionKey()
     cipher = AES.new(key, AES.MODE_CFB)
     ciphertext_bytes = cipher.encrypt(message.encode())
@@ -42,8 +42,8 @@ def encryptMessage(message: str, public_key_receiver) -> dict:
     }
 
 
-def decryptMessage(ciphertext, iv, key, private_key_receiver) -> str:
+def decryptMessage(ciphertext, iv, encrypted_key: bytes, private_key_receiver) -> str:
     iv = b64decode(iv)
     ciphertext_bytes = b64decode(ciphertext)
-    cipher = AES.new(decryptKey(private_key_receiver, key), AES.MODE_CFB, iv)
+    cipher = AES.new(decryptKey(private_key_receiver, encrypted_key), AES.MODE_CFB, iv)
     return cipher.decrypt(ciphertext_bytes).decode()
