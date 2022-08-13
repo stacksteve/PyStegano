@@ -1,4 +1,4 @@
-from Stegano import Stegano
+from src.libStegano.Stegano import Stegano
 from PIL import Image
 
 

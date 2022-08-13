@@ -1,7 +1,6 @@
 class Stegano:
     def __init__(self):
-        # self.seperator = getSeperator(message) -> should look like this later
-        self.seperator = "!#!SepSepSep!#!"
+        self.seperator = "#@&%$*+<>=^"
         self.seperator_binary = self.stringToBinary(self.seperator)
         self.seperator_length = len(self.seperator_binary)
 
@@ -34,12 +33,3 @@ class Stegano:
     @staticmethod
     def binaryToInt(binary: str) -> int:
         return int(binary, 2)
-
-    # TODO: Create seperator by evaluating the input
-    @staticmethod
-    def createSeperator(message: str) -> str:
-        special_characters = set('.:,;-!?#@&%$*+<>=()')
-        print(special_characters)
-        for character in special_characters:
-            if character not in message:
-                return character
