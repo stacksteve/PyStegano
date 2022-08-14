@@ -3,7 +3,7 @@ from Crypto.Hash import SHA3_256
 from Crypto.PublicKey import RSA
 from Crypto.Random import get_random_bytes
 
-seperator = bytes([35, 35, 35, 35, 35, 35])
+byte_seperator = bytes([35, 35, 35, 35, 35, 35])
 
 
 def generateKeyPair(key_name: str) -> None:
@@ -32,14 +32,14 @@ def getNewSymmetricEncryptionKey() -> bytes:
     return SHA3_256.new(key).digest()
 
 
-def encryptMessage(message: str, public_key_receiver: RSA):
+def encryptMessage(message: str, public_key_receiver: RSA) -> bytes:
     key = getNewSymmetricEncryptionKey()
     cipher = AES.new(key, AES.MODE_CFB)
     ciphertext_bytes = cipher.encrypt(message.encode())
-    return ciphertext_bytes + seperator + cipher.iv + seperator + encryptKey(public_key_receiver, key)
+    return ciphertext_bytes + byte_seperator + cipher.iv + byte_seperator + encryptKey(public_key_receiver, key)
 
 
 def decryptMessage(encryption_bytes: bytes, private_key_receiver) -> str:
-    ciphertext_bytes, iv, encrypted_key = encryption_bytes.split(seperator)
+    ciphertext_bytes, iv, encrypted_key = encryption_bytes.split(byte_seperator)
     cipher = AES.new(decryptKey(private_key_receiver, encrypted_key), AES.MODE_CFB, iv)
     return cipher.decrypt(ciphertext_bytes).decode()
