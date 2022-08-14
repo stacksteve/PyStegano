@@ -1,4 +1,5 @@
 from src.libStegano.Stegano import Stegano
+from src.libSecurity.Encryption import decryptMessage
 from PIL import Image
 
 
@@ -10,8 +11,14 @@ class SteganoReader(Stegano):
         self.__stegano_image_data = self.__stegano_rgba.getdata()
         self.__extracted_message = str()
 
-    def getExtractedMessage(self):
+    def getExtractedMessage(self) -> str:
         return self.__extracted_message
+
+    def __setExtractedMessage(self, secret_message: str, private_key_receiver) -> None:
+        if private_key_receiver:
+            self.__extracted_message = decryptMessage(self.binaryToBytes(secret_message), private_key_receiver)
+        else:
+            self.__extracted_message = self.binaryToString(secret_message)
 
     def __findSeperatorPosition(self) -> int:
         temp_string = ""
@@ -32,11 +39,11 @@ class SteganoReader(Stegano):
             secret_message_length += self.__extractBitAt(i)
         return int(self.binaryToString(secret_message_length)), seperator_begin + self.seperator_length
 
-    def extractSecretMessage(self):
+    def extractSecretMessage(self, private_key_receiver=None) -> None:
         secret_message_length, seperator_end = self.__extractSecretMessageLength()
         secret_message_end = seperator_end + secret_message_length
         secret_message = "".join([self.__extractBitAt(i) for i in range(seperator_end, secret_message_end)])
-        self.__extracted_message = self.binaryToString(secret_message)
+        self.__setExtractedMessage(secret_message, private_key_receiver)
 
     def __extractBitAt(self, i: int) -> str:
         return str(self.__original_image_data[i][0] ^ self.__stegano_image_data[i][0])

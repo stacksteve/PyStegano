@@ -3,7 +3,7 @@ from Crypto.Hash import SHA3_256
 from Crypto.PublicKey import RSA
 from Crypto.Random import get_random_bytes
 
-seperator = "#########".encode()
+seperator = bytes([35, 35, 35, 35, 35, 35])
 
 
 def generateKeyPair(key_name: str) -> None:
