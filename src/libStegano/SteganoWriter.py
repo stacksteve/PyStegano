@@ -1,12 +1,12 @@
 from src.libStegano.Stegano import Stegano
 from src.libSecurity.Encryption import encryptMessage
-from src.utils.PicReader import readImageData, writeImage
+from src.utils.PicReader import readImage, writeImage
 
 
 class SteganoWriter(Stegano):
     def __init__(self, in_file_name: str, out_file_name: str):
         super().__init__()
-        self.__rgb, self.__image_data = readImageData(in_file_name)
+        self.__rgb, self.__image_data = readImage(in_file_name)
         self.__out_file_name = out_file_name
 
     def placeSecretMessage(self, secret_message: str, public_key_receiver=None):
