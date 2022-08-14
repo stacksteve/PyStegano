@@ -2,7 +2,8 @@
 from src.libStegano.SteganoReader import SteganoReader
 from time import time
 
-
+# WARNING: Use this value only if high performance is needed and the image has a higher resolution, otherwise
+# possible index out of bounds
 def readerTest():
     # Performance test for reading with standard seperator "!#!SepSepSep!#!" -> 136 or 135 best
     time_list = []

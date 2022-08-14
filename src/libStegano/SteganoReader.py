@@ -24,7 +24,7 @@ class SteganoReader(Stegano):
         i = 0
         while True:
             temp_string += self.__extractBitAt(i)
-            if i >= self.seperator_length and i % 136 == 0:  # Reason for % 136 see performanceTest.py
+            if i >= self.seperator_length:
                 seperator_position = temp_string.find(self.seperator_binary)
                 if seperator_position != -1:
                     return seperator_position
