@@ -32,14 +32,14 @@ def getNewSymmetricEncryptionKey() -> bytes:
     return SHA3_256.new(key).digest()
 
 
-def encryptMessage(message: str, public_key_receiver: RSA) -> bytes:
+def encryptMessage(message: bytes, public_key_receiver: RSA) -> bytes:
     key = getNewSymmetricEncryptionKey()
     cipher = AES.new(key, AES.MODE_CFB)
-    ciphertext_bytes = cipher.encrypt(message.encode())
+    ciphertext_bytes = cipher.encrypt(message)
     return ciphertext_bytes + byte_seperator + cipher.iv + byte_seperator + encryptKey(public_key_receiver, key)
 
 
-def decryptMessage(encryption_bytes: bytes, private_key_receiver) -> str:
+def decryptMessage(encryption_bytes: bytes, private_key_receiver: RSA) -> str:
     ciphertext_bytes, iv, encrypted_key = encryption_bytes.split(byte_seperator)
     cipher = AES.new(decryptKey(private_key_receiver, encrypted_key), AES.MODE_CFB, iv)
     return cipher.decrypt(ciphertext_bytes).decode()

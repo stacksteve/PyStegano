@@ -23,7 +23,7 @@ class SteganoWriter(Stegano):
 
     def __getSecretMessageBits(self, secret_message: str, public_key_receiver):
         if public_key_receiver:
-            return self.bytesToBinary(encryptMessage(secret_message, public_key_receiver))
+            return self.bytesToBinary(encryptMessage(secret_message.encode(), public_key_receiver))
         else:
             return self.stringToBinary(secret_message)
 
