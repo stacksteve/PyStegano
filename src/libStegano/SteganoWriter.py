@@ -1,6 +1,7 @@
 from src.libStegano.Stegano import Stegano
 from src.libSecurity.Encryption import encryptMessage
 from src.utils.PicReader import readImage, writeImage
+from src.libExceptions.MessageLengthException import MessageLengthException
 
 
 class SteganoWriter(Stegano):
@@ -10,6 +11,8 @@ class SteganoWriter(Stegano):
         self.__out_file_name = out_file_name
 
     def placeSecretMessage(self, secret_message: str, public_key_receiver=None):
+        if not self.hasCorrectLength(secret_message):
+            raise MessageLengthException("The message is too long for the image you selected.")
         secret_message_bits = self.__getSecretMessageBits(secret_message, public_key_receiver)
         secret_message_length = self.__genMessageLengthBinaryString(len(secret_message_bits))
         full_secret_message = secret_message_length + secret_message_bits
@@ -25,10 +28,15 @@ class SteganoWriter(Stegano):
             return self.stringToBinary(secret_message)
 
     def __genMessageLengthBinaryString(self, message_len: int) -> str:
-        message_len_binary = self.stringToBinary(str(message_len))
-        return message_len_binary + self.seperator_binary
+        secret_message_len_binary = self.stringToBinary(str(message_len))
+        return secret_message_len_binary + self.seperator_binary
 
     def __getRgbaValues(self, i: int, flip_bit: bool) -> tuple:
         return self.__image_data[i][0] ^ (1 and flip_bit), \
                self.__image_data[i][1], \
                self.__image_data[i][2]
+
+    def hasCorrectLength(self, secret_message) -> bool:
+        maximum_bits = len(self.__image_data)
+        message_length = self.seperator_length + len(self.stringToBinary(secret_message))
+        return maximum_bits >= message_length
