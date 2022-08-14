@@ -2,6 +2,7 @@
 from src.libStegano.SteganoReader import SteganoReader
 from time import time
 
+
 # WARNING: Use this value only if high performance is needed and the image has a higher resolution, otherwise
 # possible index out of bounds
 def readerTest():
