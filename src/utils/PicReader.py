@@ -19,8 +19,9 @@ def readImageData(image_path: str) -> tuple:
     return image_rgb, image_rgb_data
 
 
-def writeImage() -> None:
-    pass
+def writeImage(new_image_data: list, rgb: Image, out_file_name: str) -> None:
+    rgb.putdata(new_image_data)
+    rgb.save(out_file_name)
 
 
 def main():

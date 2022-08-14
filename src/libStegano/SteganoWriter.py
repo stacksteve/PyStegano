@@ -1,13 +1,12 @@
 from src.libStegano.Stegano import Stegano
 from src.libSecurity.Encryption import encryptMessage
-from src.utils.PicReader import readImageData
-from PIL import Image
+from src.utils.PicReader import readImageData, writeImage
 
 
 class SteganoWriter(Stegano):
     def __init__(self, in_file_name: str, out_file_name: str):
         super().__init__()
-        self.__rgba, self.__image_data = readImageData(in_file_name)
+        self.__rgb, self.__image_data = readImageData(in_file_name)
         self.__out_file_name = out_file_name
 
     def placeSecretMessage(self, secret_message: str, public_key_receiver=None):
@@ -17,7 +16,7 @@ class SteganoWriter(Stegano):
         new_image_data = []
         for i in range(len(self.__image_data)):
             new_image_data.append(self.__getRgbaValues(i, i < len(full_secret_message) and int(full_secret_message[i])))
-        self.__writeDataToFile(new_image_data)
+        writeImage(new_image_data, self.__rgb, self.__out_file_name)
 
     def __getSecretMessageBits(self, secret_message: str, public_key_receiver):
         if public_key_receiver:
@@ -33,7 +32,3 @@ class SteganoWriter(Stegano):
         return self.__image_data[i][0] ^ (1 and flip_bit), \
                self.__image_data[i][1], \
                self.__image_data[i][2]
-
-    def __writeDataToFile(self, new_image_data):
-        self.__rgba.putdata(new_image_data)
-        self.__rgba.save(self.__out_file_name)
