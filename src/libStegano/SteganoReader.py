@@ -1,13 +1,13 @@
 from src.libStegano.Stegano import Stegano
 from src.libSecurity.Encryption import decryptMessage
-from src.utils.PicReader import readImage
+from src.utils.PicReader import readImage, readImageRgb
 
 
 class SteganoReader(Stegano):
     def __init__(self, original_image_path: str, stegano_image_path: str):
         super().__init__()
-        self.__original_image_data = readImage(original_image_path)[1]  # we only need the color data
-        self.__stegano_rgb, self.__stegano_image_data = readImage(stegano_image_path)
+        self.__original_image_data = readImageRgb(original_image_path)  # we only need the color data
+        self.__stegano_image_data = readImageRgb(stegano_image_path)
         self.__extracted_message = str()
 
     def getExtractedMessage(self) -> str:
@@ -19,24 +19,15 @@ class SteganoReader(Stegano):
         else:
             self.__extracted_message = self.binaryToString(secret_message)
 
-    def __findSeperatorPosition(self) -> int:
-        temp_string = ""
-        i = 0
-        while True:
-            temp_string += self.__extractBitAt(i)
-            if i >= self.seperator_length:
-                seperator_position = temp_string.find(self.seperator_binary)
-                if seperator_position != -1:
-                    return seperator_position
-            i += 1
-
     def __extractSecretMessageLength(self) -> tuple:
-        seperator_begin = self.__findSeperatorPosition()
-        assert seperator_begin != -1
-        secret_message_length = ""
-        for i in range(seperator_begin):
-            secret_message_length += self.__extractBitAt(i)
-        return int(self.binaryToString(secret_message_length)), seperator_begin + self.seperator_length
+        message_length_and_seperator = ""
+        for i in range(len(self.__stegano_image_data)):
+            message_length_and_seperator += self.__extractBitAt(i)
+            if i >= self.seperator_length:
+                seperator_begin = message_length_and_seperator.find(self.seperator_binary)
+                if seperator_begin != -1:
+                    return int(self.binaryToString(message_length_and_seperator[:seperator_begin])), \
+                           seperator_begin + self.seperator_length
 
     def extractSecretMessage(self, private_key_receiver=None) -> None:
         secret_message_length, seperator_end = self.__extractSecretMessageLength()
@@ -45,4 +36,6 @@ class SteganoReader(Stegano):
         self.__setExtractedMessage(secret_message, private_key_receiver)
 
     def __extractBitAt(self, i: int) -> str:
+        orig = self.__original_image_data[i][0]
+        steg = self.__stegano_image_data[i][0]
         return str(self.__original_image_data[i][0] ^ self.__stegano_image_data[i][0])
