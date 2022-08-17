@@ -4,7 +4,7 @@ from PIL import Image
 def readImage(image_path: str) -> tuple:
     image_rgb = Image.open(image_path).convert("RGB")
     image_rgb_data = image_rgb.getdata()
-    return image_rgb, image_rgb_data
+    return image_rgb, list(image_rgb_data)
 
 
 def readImageRgb(image_path: str) -> list:
