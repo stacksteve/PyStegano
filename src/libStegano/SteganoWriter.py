@@ -2,7 +2,6 @@ from src.libStegano.Stegano import Stegano
 from src.libSecurity.Encryption import encryptMessage
 from src.utils.PicReader import readImage, writeImage
 from src.libExceptions.MessageLengthException import MessageLengthException
-import sys
 
 
 class SteganoWriter(Stegano):

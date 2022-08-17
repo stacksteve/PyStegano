@@ -1,12 +1,12 @@
 from src.libStegano.Stegano import Stegano
 from src.libSecurity.Encryption import decryptMessage
-from src.utils.PicReader import readImage, readImageRgb
+from src.utils.PicReader import readImageRgb
 
 
 class SteganoReader(Stegano):
     def __init__(self, original_image_path: str, stegano_image_path: str):
         super().__init__()
-        self.__original_image_data = readImageRgb(original_image_path)  # we only need the color data
+        self.__original_image_data = readImageRgb(original_image_path)
         self.__stegano_image_data = readImageRgb(stegano_image_path)
         self.__extracted_message = str()
 
@@ -36,6 +36,4 @@ class SteganoReader(Stegano):
         self.__setExtractedMessage(secret_message, private_key_receiver)
 
     def __extractBitAt(self, i: int) -> str:
-        orig = self.__original_image_data[i][0]
-        steg = self.__stegano_image_data[i][0]
         return str(self.__original_image_data[i][0] ^ self.__stegano_image_data[i][0])
