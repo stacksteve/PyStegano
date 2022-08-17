@@ -19,7 +19,7 @@ class SteganoWriter(Stegano):
             raise MessageLengthException("The message is too long for the image you selected.")
         new_image_data = []
         for i in range(len(self.__image_data)):
-            new_image_data.append(self.__getRgbaValues(i, i < len(full_secret_message) and int(full_secret_message[i])))
+            new_image_data.append(self.__getRgbValues(i, i < len(full_secret_message) and int(full_secret_message[i])))
         writeImage(new_image_data, self.__rgb, self.__out_file_name)
 
     def __getSecretMessageBits(self, secret_message: str, public_key_receiver):
@@ -31,7 +31,7 @@ class SteganoWriter(Stegano):
     def __genMessageLengthBinaryString(self, message_len: int) -> str:
         return self.stringToBinary(str(message_len)) + self.seperator_binary
 
-    def __getRgbaValues(self, i: int, flip_bit: int) -> tuple:
+    def __getRgbValues(self, i: int, flip_bit: int) -> tuple:
         return self.__image_data[i][0] ^ flip_bit, \
                self.__image_data[i][1], \
                self.__image_data[i][2]
