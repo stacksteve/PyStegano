@@ -1,5 +1,4 @@
 from Crypto.Cipher import AES, PKCS1_OAEP
-from Crypto.Hash import SHA3_256
 from Crypto.PublicKey import RSA
 from Crypto.Random import get_random_bytes
 
@@ -28,8 +27,7 @@ def decryptKey(private_key_receiver: RSA, encrypted_key: bytes) -> bytes:
 
 
 def getNewSymmetricEncryptionKey() -> bytes:
-    key = get_random_bytes(32)
-    return SHA3_256.new(key).digest()
+    return get_random_bytes(32)
 
 
 def encryptMessage(message: bytes, public_key_receiver: RSA) -> bytes:
