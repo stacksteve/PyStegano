@@ -18,8 +18,8 @@ class SteganoWriter(Stegano):
         if not self.hasCorrectLength(full_secret_message):
             raise MessageLengthException("The message is too long for the image you selected.")
         new_image_data = []
-        for i in range(len(full_secret_message)):
-            self.__image_data[i] = (self.__getRgbaValues(i, int(full_secret_message[i])))
+        for i in range(len(self.__image_data)):
+            new_image_data.append(self.__getRgbaValues(i, i < len(full_secret_message) and int(full_secret_message[i])))
         writeImage(new_image_data, self.__rgb, self.__out_file_name)
 
     def __getSecretMessageBits(self, secret_message: str, public_key_receiver):
