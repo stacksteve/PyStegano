@@ -22,7 +22,8 @@ class Stegano:
         :param binary_message: Binary message that has been extracted from an image.
         :return: The string representation of the bitstream.
         """
-        return "".join(chr(Stegano.binaryToInt(binary_message[i * 8:i * 8 + 8])) for i in range(len(binary_message) // 8))
+        return "".join(chr(Stegano.binaryToInt(binary_message[i * 8:i * 8 + 8]))
+                       for i in range(len(binary_message) // 8))
 
     @staticmethod
     def intToBinary(integer: int) -> str:
