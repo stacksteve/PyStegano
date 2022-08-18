@@ -20,13 +20,13 @@ class SteganoReader(Stegano):
             self.__extracted_message = self.binaryToString(secret_message)
 
     def __extractSecretMessageLength(self) -> tuple:
-        message_length_and_seperator = ""
+        secret_message_length = ""
         for i in range(len(self.__stegano_image_data)):
-            message_length_and_seperator += self.__extractBitAt(i)
+            secret_message_length += self.__extractBitAt(i)
             if i >= self.seperator_length:
-                seperator_begin = message_length_and_seperator.find(self.seperator_binary)
+                seperator_begin = secret_message_length.find(self.seperator_binary)
                 if seperator_begin != -1:
-                    return int(self.binaryToString(message_length_and_seperator[:seperator_begin])), \
+                    return int(self.binaryToString(secret_message_length[:seperator_begin])), \
                            seperator_begin + self.seperator_length
 
     def extractSecretMessage(self, private_key_receiver=None) -> None:
