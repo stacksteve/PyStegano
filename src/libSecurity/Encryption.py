@@ -26,12 +26,8 @@ def decrypt_symmetric_key(private_key_receiver: RSA, encrypted_key: bytes) -> by
     return cipher.decrypt(encrypted_key)
 
 
-def gen_symmetric_encryption_key() -> bytes:
-    return get_random_bytes(32)
-
-
 def encrypt_message(message: bytes, public_key_receiver: RSA) -> bytes:
-    key = gen_symmetric_encryption_key()
+    key = get_random_bytes(32)
     cipher = AES.new(key, AES.MODE_CFB)
     ciphertext_bytes = cipher.encrypt(message)
     return ciphertext_bytes + byte_seperator + cipher.iv + byte_seperator + encrypt_symmetric_key(public_key_receiver, key)
