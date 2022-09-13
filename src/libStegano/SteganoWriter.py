@@ -6,7 +6,6 @@ from src.libExceptions.MessageLengthException import MessageLengthException
 
 class SteganoWriter(Stegano):
     def __init__(self, in_file_name: str, out_file_name: str):
-        super().__init__()
         self.__rgb, self.__image_data = read_image(in_file_name)
         self.__out_file_name = out_file_name
 

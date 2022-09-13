@@ -1,15 +1,14 @@
 class Stegano:
-    def __init__(self):
-        # TODO: Static
-        self.seperator_binary = self.string_to_binary("#@&%$*+<>=^")
-        self.seperator_length = len(self.seperator_binary)
+    # seperator = #@&%$*+<>=^
+    seperator_binary = "0010001101000000001001100010010100100100001010100010101100111100001111100011110101011110"
+    seperator_length = len(seperator_binary)
 
     @staticmethod
     def string_to_binary(message: str) -> str:
         """
         Format string to binary representation.
 
-        :param message: The original message, than should be placed inside an image.
+        :param message: The original message that should be placed inside an image.
         :return: The binary representation of the
         """
         return "".join([format(ord(char), "08b") for char in message])

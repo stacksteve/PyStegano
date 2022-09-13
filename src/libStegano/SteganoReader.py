@@ -5,7 +5,6 @@ from src.utils.PicReader import read_image_rgb
 
 class SteganoReader(Stegano):
     def __init__(self, original_image_path: str, stegano_image_path: str):
-        super().__init__()
         self.__original_image_data = read_image_rgb(original_image_path)
         self.__stegano_image_data = read_image_rgb(stegano_image_path)
         self.__extracted_message = str()
