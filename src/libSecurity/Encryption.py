@@ -30,7 +30,8 @@ def encrypt_message(message: bytes, public_key_receiver: RSA) -> bytes:
     key = get_random_bytes(32)
     cipher = AES.new(key, AES.MODE_CFB)
     ciphertext_bytes = cipher.encrypt(message)
-    return ciphertext_bytes + byte_seperator + cipher.iv + byte_seperator + encrypt_symmetric_key(public_key_receiver, key)
+    return ciphertext_bytes + byte_seperator + cipher.iv + byte_seperator + encrypt_symmetric_key(public_key_receiver,
+                                                                                                  key)
 
 
 def decrypt_message(encryption_bytes: bytes, private_key_receiver: RSA) -> str:
