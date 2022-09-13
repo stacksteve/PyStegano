@@ -7,7 +7,7 @@ class Stegano:
     @staticmethod
     def string_to_binary(message: str) -> str:
         """
-        Get bytes from message string.
+        Format string to binary representation.
 
         :param message: The original message, than should be placed inside an image.
         :return: The binary representation of the

@@ -20,7 +20,7 @@ class SteganoWriter(Stegano):
             self.__image_data[i] = (self.__get_rgb_values(i, int(full_secret_message[i])))
         write_image(self.__image_data, self.__rgb, self.__out_file_name)
 
-    def __get_secret_message_bits(self, secret_message: str, public_key_receiver):
+    def __get_secret_message_bits(self, secret_message: str, public_key_receiver) -> str:
         if public_key_receiver:
             return self.bytes_to_binary(encrypt_message(secret_message.encode(), public_key_receiver))
         else:
