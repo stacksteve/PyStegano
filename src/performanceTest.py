@@ -12,7 +12,7 @@ def readerTest():
     for i in range(1, 300):
         steg = SteganoReader("desktop.png", "desktop_secret.png")
         start = time()
-        steg.extractSecretMessage()
+        steg.extract_secret_message()
         time_needed = time() - start
         time_list.append(time_needed)
         time_dict[time_needed] = i
