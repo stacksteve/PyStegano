@@ -35,6 +35,4 @@ class SteganoWriter(Stegano):
                self.__image_data[i][2]
 
     def hasCorrectLength(self, secret_message) -> bool:
-        maximum_bits = len(self.__image_data)
-        message_length = len(secret_message)
-        return maximum_bits >= message_length
+        return len(self.__image_data) >= len(secret_message)
