@@ -25,11 +25,11 @@ class SteganoReader(Stegano):
             if i >= self.seperator_length:
                 seperator_begin = secret_message_length.find(self.seperator_binary)
                 if seperator_begin != -1:
-                    return int(self.binary_to_string(secret_message_length[:seperator_begin])), \
-                           seperator_begin + self.seperator_length
+                    return seperator_begin + self.seperator_length, \
+                        int(self.binary_to_string(secret_message_length[:seperator_begin]))
 
     def extract_secret_message(self, private_key_receiver=None) -> None:
-        secret_message_length, seperator_end = self.__extract_secret_message_length()
+        seperator_end, secret_message_length = self.__extract_secret_message_length()
         secret_message_end = seperator_end + secret_message_length
         secret_message = "".join([self.__extract_bit_at(i) for i in range(seperator_end, secret_message_end)])
         self.__set_extracted_message(secret_message, private_key_receiver)

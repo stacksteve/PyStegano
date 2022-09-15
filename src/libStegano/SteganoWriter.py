@@ -2,6 +2,7 @@ from src.libStegano.Stegano import Stegano
 from src.libSecurity.Encryption import encrypt_message
 from src.utils.PicReader import read_image, write_image
 from src.libExceptions.MessageLengthException import MessageLengthException
+import threading
 
 
 class SteganoWriter(Stegano):
@@ -16,7 +17,8 @@ class SteganoWriter(Stegano):
         if not self.has_correct_length(full_secret_message):
             raise MessageLengthException("The message is too long for the image you selected.")
         for i in range(len(full_secret_message)):
-            self.__image_data[i] = (self.__get_rgb_values(i, int(full_secret_message[i])))
+            # TODO: Multithreaded
+            self.__image_data[i] = self.__get_rgb_values(i, int(full_secret_message[i]))
         write_image(self.__image_data, self.__rgb, self.__out_file_name)
 
     def __get_secret_message_bits(self, secret_message: str, public_key_receiver) -> str:
