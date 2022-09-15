@@ -2,7 +2,7 @@ from Crypto.Cipher import AES, PKCS1_OAEP
 from Crypto.PublicKey import RSA
 from Crypto.Random import get_random_bytes
 
-byte_seperator = bytes([35, 35, 35, 35, 35, 35])
+byte_seperator = bytes([42, 42, 42, 42, 42, 42])
 
 
 def generate_rsa_key_pair(key_name: str) -> None:
