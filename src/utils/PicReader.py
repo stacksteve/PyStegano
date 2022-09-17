@@ -8,8 +8,7 @@ def read_image(image_path: str) -> tuple:
 
 
 def read_image_rgb(image_path: str) -> list:
-    image_rgb_data = Image.open(image_path).convert("RGB").getdata()
-    return image_rgb_data
+    return Image.open(image_path).convert("RGB").getdata()
 
 
 def write_image(new_image_data: list, rgb: Image, out_file_name: str) -> None:
