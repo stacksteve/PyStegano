@@ -1,6 +1,6 @@
-from src.libStegano.Stegano import Stegano
-from src.libSecurity.Encryption import decrypt_message
-from src.utils.PicReader import read_image_rgb
+from libStegano.Stegano import Stegano
+from libSecurity.Encryption import decrypt_message
+from utils.PicReader import read_image_rgb
 
 
 class SteganoReader(Stegano):
