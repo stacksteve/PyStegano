@@ -1,7 +1,7 @@
 from libStegano.Stegano import Stegano
-from libSecurity.Encryption import encrypt_message
-from utils.PicReader import read_image, write_image
-from libExceptions.MessageLengthException import MessageLengthException
+from libSecurity import encrypt_message
+from utils import read_image, write_image
+from libExceptions import MessageLengthException
 
 
 class SteganoWriter(Stegano):
@@ -12,7 +12,7 @@ class SteganoWriter(Stegano):
         :param original_image_path: Image that should be used to perform steganography.
         :param stegano_image_path: Secret message will be placed in this image.
         """
-        self.__rgb, self.__image_data = read_image(original_image_path)
+        self.__pil_image, self.__image_data = read_image(original_image_path)
         self.__out_file_name = stegano_image_path
 
     def place_secret_message(self, secret_message: str, public_key_receiver=None) -> None:
@@ -39,7 +39,7 @@ class SteganoWriter(Stegano):
             raise MessageLengthException("The image you selected has too less pixel to store the secret message.")
         for i in range(len(full_secret_message)):
             self.__image_data[i] = self.__bit_flipper(i, int(full_secret_message[i]))
-        write_image(self.__image_data, self.__rgb, self.__out_file_name)
+        write_image(self.__image_data, self.__pil_image, self.__out_file_name)
 
     def __get_secret_message_bits(self, secret_message: str, public_key_receiver) -> str:
         """
