@@ -1,10 +1,14 @@
 # from SteganoWriter import SteganoWriter
 from src.libStegano.SteganoReader import SteganoReader
 from time import time
+# from PIL import Image
+# import cv2
+from statistics import mean
+from src.utils.PicReader import read_image_rgb, read_image_rgb_cv2
 
 
-# WARNING: Use this value only if high performance is needed and the image has a higher resolution, otherwise
-# possible index out of bounds
+# WARNING: Use the value only if high performance is needed and the image has a higher resolution, otherwise
+# error out of bounds possible
 def readerTest():
     # Performance test for reading with standard seperator "!#!SepSepSep!#!" -> 136 or 135 best
     time_list = []
@@ -24,7 +28,7 @@ def readerTest():
 
 
 def main():
-    readerTest()
+    pass
 
 
 if __name__ == '__main__':
