@@ -1,29 +1,33 @@
-from libStegano import Stegano
-from libStegano import SteganoReader
-from libStegano import SteganoWriter
-from libSecurity import import_rsa_key
-from libSocket import transmit_data
-from libSocket import receive_data
+import argparse
+import os
+import sys
+
+
+def start_stegano(in_file: str, out_file: str, hide: bool, message: str):
+    from libStegano import SteganoReader
+    from libStegano import SteganoWriter
+
+    if hide:
+        stegano_writer = SteganoWriter(in_file, out_file)
+        stegano_writer.place_secret_message(message)
+    else:
+        stegano_reader = SteganoReader(in_file, out_file)
+        stegano_reader.extract_secret_message()
+        sys.stdout.write(stegano_reader.get_extracted_message() + '\n')
 
 
 def main():
-    # Place message (Client)
-    stegano_writing_machine = SteganoWriter("desktop.png", "desktop_secret.png")
-    secret_message = str(input("Secret message: "))
-    public_key = import_rsa_key("test_public.pem")
-    stegano_writing_machine.place_secret_message(secret_message, public_key)
-    # image_data = open("desktop_secret.png", "rb").read()
-    # transmit_data(image_data, "192.168.178.28", 1337)
+    parser = argparse.ArgumentParser()
+    stegano_group = parser.add_mutually_exclusive_group(required=True)
+    stegano_group.add_argument('--write', metavar='MESSAGE', type=str, help='Provide a message to hide')
+    stegano_group.add_argument('--read', action='store_true', help='Read a hidden message from image')
+    parser.add_argument('in_img', metavar='ORIGIN', type=str, help='Original image')
+    parser.add_argument('out_img', metavar='STEGANO', type=str, help='Stegano image')
+    args = parser.parse_args()
 
-    # Extract message (Server)
-    # port = 1337
-    # image_data = receive_data(port)
-    # open("desktop_secret.png", "wb").write(image_data)
-
-    stegano_reading_machine = SteganoReader("desktop.png", "desktop_secret.png")
-    private_key = import_rsa_key("test_private.pem")
-    stegano_reading_machine.extract_secret_message(private_key)
-    print("Extracted message:", stegano_reading_machine.get_extracted_message())
+    if not os.path.exists(args.in_img):
+        raise FileExistsError('File does not exist')
+    start_stegano(args.in_img, args.out_img, bool(args.write), args.write)
 
 
 if __name__ == "__main__":
