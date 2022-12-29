@@ -18,36 +18,24 @@ class SteganoReader(Stegano):
     def extract_secret_message(self, private_key_receiver=None) -> None:
         """
         Steps to extract the secret message:
-            1. Find message position
-            2. Read the secret message bits
-            3. Convert string to plaintext (__set_extracted_message does that)
+            1. As long as the end flag is not found read keep reading new bits
+            1.1 Read the minimum amount of bits that could contain the end flag
+            1.2 Find the begin of the end flag
+            2. All bits before the end flag are the secret message
+            3. Convert string/encrypted bytes to plaintext (__set_extracted_message does that)
 
-        :param private_key_receiver: RSA private key to decrypt the symmetric key
+        :param private_key_receiver: RSA private key_path to decrypt the symmetric key_path
         :return: Method does not return anything
         """
-        secret_message_begin, secret_message_length = self.__extract_secret_message_length()
-        secret_message_end = secret_message_begin + secret_message_length
-        secret_message = "".join([self.__extract_bit_at(i) for i in range(secret_message_begin, secret_message_end)])
+        secret_message_bin = ''
+        secret_message = ''
+        for px in range(len(self.__stegano_image_data)):
+            secret_message_bin += self.__check_bit_flip_at(px)
+            if px >= self.END_FLAG_LEN:
+                end_flag_begin = secret_message_bin.find(self.END_FLAG_BIN)
+                if end_flag_begin != -1:
+                    secret_message = secret_message_bin[:end_flag_begin]
         self.__set_extracted_message(secret_message, private_key_receiver)
-
-    def __extract_secret_message_length(self) -> tuple:
-        """
-        Steps to extract the message length:
-            1. Read the minimum amount of bits that could contain the seperator
-            2. As long as the seperator is not found read the next bit and search again
-
-        :return: Tuple contains:
-                    - Pixel position where the secret message begins    (Integer)
-                    - Length of the secret message bitstream            (Integer)
-        """
-        secret_message_length = ""
-        for i in range(len(self.__stegano_image_data)):
-            secret_message_length += self.__extract_bit_at(i)
-            if i >= self.seperator_length:
-                seperator_begin = secret_message_length.find(self.seperator_binary)
-                if seperator_begin != -1:
-                    return seperator_begin + self.seperator_length, \
-                           int(self.binary_to_string(secret_message_length[:seperator_begin]))
 
     def __set_extracted_message(self, secret_message: str, private_key_receiver) -> None:
         """
@@ -55,7 +43,7 @@ class SteganoReader(Stegano):
         the program decrypts the string before conversion to plaintext.
 
         :param secret_message: String that contains the secret message in plaintext
-        :param private_key_receiver: RSA private key to decrypt the symmetric key
+        :param private_key_receiver: RSA private key_path to decrypt the symmetric key_path
         :return: Method does not return anything
         """
         if private_key_receiver:
@@ -71,7 +59,7 @@ class SteganoReader(Stegano):
         """
         return self.__extracted_message
 
-    def __extract_bit_at(self, i: int) -> str:
+    def __check_bit_flip_at(self, i: int) -> str:
         """
         Extracts a bit from the secret message at the respective pixel position.
 
