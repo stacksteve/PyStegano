@@ -1,7 +1,7 @@
 class Stegano:
-    # seperator = #@&%$*+<>=^
-    seperator_binary = "0010001101000000001001100010010100100100001010100010101100111100001111100011110101011110"
-    seperator_length = len(seperator_binary)
+    # END_FLAG = #@&%$*+<>=^
+    END_FLAG_BIN = '0010001101000000001001100010010100100100001010100010101100111100001111100011110101011110'
+    END_FLAG_LEN = len(END_FLAG_BIN)
 
     @staticmethod
     def string_to_binary(message: str) -> str:
@@ -11,7 +11,7 @@ class Stegano:
         :param message: The plaintext message that will be placed inside an image.
         :return: The binary representation of the
         """
-        return "".join([format(ord(char), "08b") for char in message])
+        return "".join([Stegano.int_to_binary(ord(char)) for char in message])
 
     @staticmethod
     def binary_to_string(binary_message: str) -> str:
@@ -34,7 +34,7 @@ class Stegano:
         """
         if integer > 255:
             raise ValueError("Only values less or equal 255 (1 byte) are allowed")
-        return format(integer, "08b")
+        return format(integer, '08b')
 
     @staticmethod
     def binary_to_int(binary: str) -> int:
