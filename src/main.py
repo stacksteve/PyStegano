@@ -19,15 +19,15 @@ def start_stegano(in_file: str, out_file: str, hide: bool, message: str):
 def main():
     parser = argparse.ArgumentParser()
     stegano_group = parser.add_mutually_exclusive_group(required=True)
-    stegano_group.add_argument('--write', metavar='MESSAGE', type=str, help='Provide a message to hide')
-    stegano_group.add_argument('--read', action='store_true', help='Read a hidden message from image')
+    stegano_group.add_argument('-w', metavar='MESSAGE', type=str, help='Provide a message to hide')
+    stegano_group.add_argument('-r', action='store_true', help='Read a hidden message from image')
     parser.add_argument('in_img', metavar='ORIGIN', type=str, help='Original image')
     parser.add_argument('out_img', metavar='STEGANO', type=str, help='Stegano image')
     args = parser.parse_args()
 
     if not os.path.exists(args.in_img):
         raise FileExistsError('File does not exist')
-    start_stegano(args.in_img, args.out_img, bool(args.write), args.write)
+    start_stegano(args.in_img, args.out_img, bool(args.w), args.w)
 
 
 if __name__ == "__main__":
