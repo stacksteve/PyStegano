@@ -51,7 +51,7 @@ class SteganoReader(Stegano):
             self.__extracted_message = decrypt_message(self.binary_to_bytes(secret_message), private_key_receiver,
                                                        public_key_sender)
         else:
-            self.__extracted_message = self.binary_to_string(secret_message)
+            self.__extracted_message = self.binary_to_bytes(secret_message).decode('utf-8')
 
     def get_extracted_message(self) -> str:
         """

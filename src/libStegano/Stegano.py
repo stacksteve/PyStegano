@@ -4,17 +4,6 @@ class Stegano:
     END_FLAG_LEN = len(END_FLAG_BIN)
 
     @staticmethod
-    def binary_to_string(binary_message: str) -> str:
-        """
-        Converts a message in binary format to its utf-8 values.
-
-        :param binary_message: Binary message that has been extracted from an image.
-        :return: The string representation of the bitstream.
-        """
-        return ''.join(chr(Stegano.binary_to_int(binary_message[i * 8:i * 8 + 8]))
-                       for i in range(len(binary_message) // 8))
-
-    @staticmethod
     def int_to_binary(integer: int) -> str:
         """
         Method used to transform an integer into its binary representation.
