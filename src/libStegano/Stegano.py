@@ -4,16 +4,6 @@ class Stegano:
     END_FLAG_LEN = len(END_FLAG_BIN)
 
     @staticmethod
-    def string_to_binary(message: str) -> str:
-        """
-        Format string to binary representation.
-
-        :param message: The plaintext message that will be placed inside an image.
-        :return: The binary representation of the
-        """
-        return "".join([Stegano.int_to_binary(ord(char)) for char in message])
-
-    @staticmethod
     def binary_to_string(binary_message: str) -> str:
         """
         Inverse function of string_to_binary

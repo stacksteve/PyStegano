@@ -3,7 +3,7 @@ import os
 import sys
 
 
-def start_stegano(in_file: str, out_file: str, hide: bool, message: str):
+def start_stegano(in_file: str, out_file: str, hide: bool, message: bytes = None):
     from libStegano import SteganoReader
     from libStegano import SteganoWriter
 
@@ -27,7 +27,10 @@ def main():
 
     if not os.path.exists(args.in_img):
         raise FileExistsError('File does not exist')
-    start_stegano(args.in_img, args.out_img, bool(args.w), args.w)
+    if args.w:
+        start_stegano(args.in_img, args.out_img, bool(args.w), args.w.encode('utf-8'))
+    else:
+        start_stegano(args.in_img, args.out_img, bool(args.w))
 
 
 if __name__ == "__main__":

@@ -68,4 +68,4 @@ def encrypt_message(message: bytes, public_key_receiver: RSA) -> bytes:
 def decrypt_message(encryption_bytes: bytes, private_key_receiver: RSA) -> str:
     ciphertext_bytes, iv, encrypted_key = encryption_bytes.split(BYTE_SEP)
     cipher = AES.new(decrypt_symmetric_key(private_key_receiver, encrypted_key), AES.MODE_CFB, iv)
-    return cipher.decrypt(ciphertext_bytes).decode()
+    return cipher.decrypt(ciphertext_bytes).decode('utf-8')

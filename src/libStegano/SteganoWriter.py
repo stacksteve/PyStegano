@@ -1,5 +1,5 @@
 from libStegano.Stegano import Stegano
-from libSecurity import encrypt_message
+from libSecurity import encrypt_message, sign_message
 from utils import read_image, write_image
 
 
@@ -14,7 +14,7 @@ class SteganoWriter(Stegano):
         self.__pil_image, self.__image_data = read_image(original_image_path)
         self.__out_file_name = stegano_image_path
 
-    def place_secret_message(self, secret_message: str, public_key_receiver=None) -> None:
+    def place_secret_message(self, secret_message: bytes, public_key_receiver=None, private_key_sender=None) -> None:
         """
         Steps to place the secret message:
             1. Convert Plaintext into binary representation and add the binary end flag
@@ -25,19 +25,20 @@ class SteganoWriter(Stegano):
                 - Color value XOR 0 -> secret message bit at position px equals '0'  (do not change value)
             4. Save/Write the new image
 
+        :param private_key_sender: EdDSA private key to sign the message
         :param secret_message: Plaintext secret message
-        :param public_key_receiver: RSA public key_path to encrypt the symmetric key_path
+        :param public_key_receiver: RSA public key to encrypt the symmetric key
         :return: Method does not return anything
         """
-        secret_message_bin = self.__convert_to_binary(secret_message, public_key_receiver)
-        full_secret_message = secret_message_bin + self.END_FLAG_BIN
+        secret_message_bin = self.__convert_to_binary(secret_message, public_key_receiver, private_key_sender)
+        full_secret_message = ''.join([secret_message_bin, self.END_FLAG_BIN])
         if not self.__has_correct_length(full_secret_message):
             raise ValueError('The image you selected is too small to store the secret message.')
         for px in range(len(full_secret_message)):
             self.__image_data[px] = self.__bit_flipper(px, int(full_secret_message[px]))
         write_image(self.__image_data, self.__pil_image, self.__out_file_name)
 
-    def __convert_to_binary(self, secret_message: str, public_key_receiver) -> str:
+    def __convert_to_binary(self, secret_message: bytes, public_key_receiver, private_key_sender) -> str:
         """
         Generates a binary string from the plaintext message. Depending on whether a public key_path was provided
         the message gets encrypted before the representation is created.
@@ -47,9 +48,9 @@ class SteganoWriter(Stegano):
         :return: Binary representation of the plaintext message
         """
         if public_key_receiver:
-            return self.bytes_to_binary(encrypt_message(secret_message.encode(), public_key_receiver))
+            return self.bytes_to_binary(encrypt_message(secret_message, public_key_receiver))
         else:
-            return self.string_to_binary(secret_message)
+            return self.bytes_to_binary(secret_message)
 
     def __bit_flipper(self, px: int, flip_bit: int) -> tuple:
         """
