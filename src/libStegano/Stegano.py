@@ -6,12 +6,12 @@ class Stegano:
     @staticmethod
     def binary_to_string(binary_message: str) -> str:
         """
-        Inverse function of string_to_binary
+        Converts a message in binary format to its utf-8 values.
 
         :param binary_message: Binary message that has been extracted from an image.
         :return: The string representation of the bitstream.
         """
-        return "".join(chr(Stegano.binary_to_int(binary_message[i * 8:i * 8 + 8]))
+        return ''.join(chr(Stegano.binary_to_int(binary_message[i * 8:i * 8 + 8]))
                        for i in range(len(binary_message) // 8))
 
     @staticmethod
@@ -22,8 +22,6 @@ class Stegano:
         :param integer: Natural number <= 255 (1 byte)
         :return: Binary representation on 1 byte (8 bits)
         """
-        if integer > 255:
-            raise ValueError("Only values less or equal 255 (1 byte) are allowed")
         return format(integer, '08b')
 
     @staticmethod
@@ -44,7 +42,7 @@ class Stegano:
         :param bytestream: Sequence of bytes (0 <= Integer <= 255)
         :return: Binary string representation of the bytestream
         """
-        return "".join(Stegano.int_to_binary(byte) for byte in bytestream)
+        return ''.join(Stegano.int_to_binary(byte) for byte in bytestream)
 
     @staticmethod
     def binary_to_bytes(bitstream: str) -> bytes:
