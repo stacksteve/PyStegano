@@ -47,8 +47,8 @@ class SteganoWriter(Stegano):
         :param public_key_receiver: RSA public key_path to encrypt the symmetric key_path
         :return: Binary representation of the plaintext message
         """
-        if public_key_receiver:
-            return self.bytes_to_binary(encrypt_message(secret_message, public_key_receiver))
+        if public_key_receiver and private_key_sender:
+            return self.bytes_to_binary(encrypt_message(secret_message, public_key_receiver, private_key_sender))
         else:
             return self.bytes_to_binary(secret_message)
 

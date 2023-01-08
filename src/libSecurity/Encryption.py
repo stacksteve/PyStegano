@@ -58,14 +58,20 @@ def verify_signature(public_key_sender: ECC, message: bytes, signature: bytes) -
     return True
 
 
-def encrypt_message(message: bytes, public_key_receiver: RSA) -> bytes:
+def encrypt_message(message: bytes, public_key_receiver: RSA, private_key_sender: ECC) -> bytes:
     key = get_random_bytes(32)
     cipher = AES.new(key, AES.MODE_CFB)
-    ciphertext_bytes = cipher.encrypt(message)
-    return ciphertext_bytes + BYTE_SEP + cipher.iv + BYTE_SEP + encrypt_symmetric_key(public_key_receiver, key)
+    ciphertext = cipher.encrypt(message)
+    key_encrypted = encrypt_symmetric_key(public_key_receiver, key)
+    signature = sign_message(private_key_sender, message)
+    return ciphertext + BYTE_SEP + cipher.iv + BYTE_SEP + key_encrypted + BYTE_SEP + signature
 
 
-def decrypt_message(encryption_bytes: bytes, private_key_receiver: RSA) -> str:
-    ciphertext_bytes, iv, encrypted_key = encryption_bytes.split(BYTE_SEP)
+def decrypt_message(encryption_bytes: bytes, private_key_receiver: RSA, public_key_sender: ECC) -> str:
+    ciphertext_bytes, iv, encrypted_key, signature = encryption_bytes.split(BYTE_SEP)
     cipher = AES.new(decrypt_symmetric_key(private_key_receiver, encrypted_key), AES.MODE_CFB, iv)
-    return cipher.decrypt(ciphertext_bytes).decode('utf-8')
+    decrypted_message = cipher.decrypt(ciphertext_bytes)
+    if verify_signature(public_key_sender, decrypted_message, signature):
+        return decrypted_message.decode('utf-8')
+    else:
+        raise Exception('Signature verification failed. The message you received could be corrupted.')

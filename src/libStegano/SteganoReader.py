@@ -15,7 +15,7 @@ class SteganoReader(Stegano):
         self.__stegano_image_data = read_image_rgb(stegano_image_path)
         self.__extracted_message = str()
 
-    def extract_secret_message(self, private_key_receiver=None) -> None:
+    def extract_secret_message(self, private_key_receiver=None, public_key_sender=None) -> None:
         """
         Steps to extract the secret message:
             1. As long as the end flag is not found read keep reading new bits
@@ -24,7 +24,8 @@ class SteganoReader(Stegano):
             2. All bits before the end flag are the secret message
             3. Convert string/encrypted bytes to plaintext (__set_extracted_message does that)
 
-        :param private_key_receiver: RSA private key_path to decrypt the symmetric key_path
+        :param public_key_sender: Sender's public signing the sender
+        :param private_key_receiver: RSA private key to decrypt the symmetric key
         :return: Method does not return anything
         """
         secret_message_bin = ''
@@ -35,9 +36,9 @@ class SteganoReader(Stegano):
                 end_flag_begin = secret_message_bin.find(self.END_FLAG_BIN)
                 if end_flag_begin != -1:
                     secret_message = secret_message_bin[:end_flag_begin]
-        self.__set_extracted_message(secret_message, private_key_receiver)
+        self.__set_extracted_message(secret_message, private_key_receiver, public_key_sender)
 
-    def __set_extracted_message(self, secret_message: str, private_key_receiver) -> None:
+    def __set_extracted_message(self, secret_message: str, private_key_receiver, public_key_sender) -> None:
         """
         Setter method for the extracted message. Depending on whether the message was encrypted
         the program decrypts the string before conversion to plaintext.
@@ -46,8 +47,9 @@ class SteganoReader(Stegano):
         :param private_key_receiver: RSA private key_path to decrypt the symmetric key_path
         :return: Method does not return anything
         """
-        if private_key_receiver:
-            self.__extracted_message = decrypt_message(self.binary_to_bytes(secret_message), private_key_receiver)
+        if private_key_receiver and public_key_sender:
+            self.__extracted_message = decrypt_message(self.binary_to_bytes(secret_message), private_key_receiver,
+                                                       public_key_sender)
         else:
             self.__extracted_message = self.binary_to_string(secret_message)
 
