@@ -29,10 +29,8 @@ def main():
     if not os.path.exists(args.in_img):
         raise FileExistsError('File does not exist')
     if args.w and os.path.exists(args.w):
-        message = open(args.w).read()
+        message = open(args.w).read() if os.path.exists(args.w) else args.w
         start_stegano(args.in_img, args.out_img, bool(args.w), message.encode('utf-8'))
-    elif args.w:
-        start_stegano(args.in_img, args.out_img, bool(args.w), args.w.encode('utf-8'))
     else:
         start_stegano(args.in_img, args.out_img, bool(args.w))
 
