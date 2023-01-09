@@ -3,7 +3,7 @@ import os
 import sys
 
 
-def start_stegano(in_file: str, out_file: str, hide: bool, message: bytes = None):
+def start_stegano(in_file: str, out_file: str, hide: bool, message: bytes = None) -> None:
     from libStegano import SteganoReader
     from libStegano import SteganoWriter
 

@@ -66,6 +66,6 @@ class SteganoReader(Stegano):
         Extracts a bit from the secret message at the respective pixel position.
 
         :param i: Pixel position
-        :return: "0" or "1"
+        :return: '0' or '1'
         """
         return str(self.__original_image_data[i][0] ^ self.__stegano_image_data[i][0])
