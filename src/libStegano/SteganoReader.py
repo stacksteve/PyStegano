@@ -20,7 +20,7 @@ class SteganoReader(Stegano):
         Steps to extract the secret message:
             1. As long as the end flag is not found read keep reading new bits
             1.1 Read the minimum amount of bits that could contain the end flag
-            1.2 Find the begin of the end flag
+            1.2 Find the beginning of the end flag
             2. All bits before the end flag are the secret message
             3. Convert string/encrypted bytes to plaintext (__set_extracted_message does that)
 

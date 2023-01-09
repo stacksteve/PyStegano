@@ -41,7 +41,7 @@ class Stegano(ABC):
         """
         Inverse function of bytes_to_binary.
 
-        :param bitstream: Bit representation of the bytestream (list of integers)
+        :param bitstream: Binary representation of the bytestream (list of integers)
         :return: Bytestream
         """
         return bytes([Stegano.binary_to_int(bitstream[i * 8:i * 8 + 8]) for i in range(len(bitstream) // 8)])

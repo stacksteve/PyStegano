@@ -21,8 +21,8 @@ class SteganoWriter(Stegano):
             2. Check whether the number of bits of the message exceeds the number of pixels of the selected image
                 2.1 If so, raise Exception
             3. Change the color value for red:
-                - Color value XOR 1 -> secret message bit at position px equals '1'  (change value)
-                - Color value XOR 0 -> secret message bit at position px equals '0'  (do not change value)
+                - Color value XOR 1 -> Bit of secret message at position px equals '1'  (change value)
+                - Color value XOR 0 -> Bit of secret message at position px equals '0'  (do not change value)
             4. Save/Write the new image
 
         :param private_key_sender: EdDSA private key to sign the message
@@ -57,7 +57,7 @@ class SteganoWriter(Stegano):
         Changes the color value for red depending on the respective bit (flip_bit) of the secret message.
 
         :param px: Pixel position in __image_data list
-        :param flip_bit: Bit of secret message; if 1 than change color value for red; else color value remains unchanged
+        :param flip_bit: A bit of secret message; if 1 -> change color value for red; else color value remains unchanged
         :return: Tuple of RGB color data (color value for red might be changed)
         """
         return self.__image_data[px][0] ^ flip_bit, self.__image_data[px][1], self.__image_data[px][2]
