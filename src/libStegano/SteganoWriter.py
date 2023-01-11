@@ -35,7 +35,7 @@ class SteganoWriter(Stegano):
         if not self.__has_correct_length(full_secret_message):
             raise ValueError('The image you selected is too small to store the secret message.')
         for px in range(len(full_secret_message)):
-            self.__image_data[px] = self.__bit_flipper(px, int(full_secret_message[px]))
+            self.__image_data[px] = self.__lsb_flipper(px, int(full_secret_message[px]))
         write_image(self.__image_data, self.__pil_image, self.__out_file_name)
 
     def __convert_to_binary(self, secret_message: bytes, public_key_receiver, private_key_sender) -> str:
@@ -52,9 +52,9 @@ class SteganoWriter(Stegano):
         else:
             return self.bytes_to_binary(secret_message)
 
-    def __bit_flipper(self, px: int, flip_bit: int) -> tuple:
+    def __lsb_flipper(self, px: int, flip_bit: int) -> tuple:
         """
-        Changes the color value for red depending on the respective bit (flip_bit) of the secret message.
+        Flips the lsb of the red color value depending on the respective bit (flip_bit) of the secret message.
 
         :param px: Pixel position in __image_data list
         :param flip_bit: A bit of secret message; if 1 -> change color value for red; else color value remains unchanged

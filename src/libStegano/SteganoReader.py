@@ -31,7 +31,7 @@ class SteganoReader(Stegano):
         secret_message_bin = ''
         secret_message = ''
         for px in range(len(self.__stegano_image_data)):
-            secret_message_bin += self.__check_bit_flip_at(px)
+            secret_message_bin += self.__check_lsb_flip_at(px)
             if px >= self.END_FLAG_LEN:
                 end_flag_begin = secret_message_bin.find(self.END_FLAG_BIN)
                 if end_flag_begin != -1:
@@ -61,9 +61,9 @@ class SteganoReader(Stegano):
         """
         return self.__extracted_message
 
-    def __check_bit_flip_at(self, i: int) -> str:
+    def __check_lsb_flip_at(self, i: int) -> str:
         """
-        Extracts a bit from the secret message at the respective pixel position.
+        Detects whether the lsb (red color value) of the respective pixel was flipped.
 
         :param i: Pixel position
         :return: '0' or '1'
