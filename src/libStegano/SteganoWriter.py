@@ -20,7 +20,7 @@ class SteganoWriter(Stegano):
             1. Convert Plaintext into binary representation and add the binary end flag
             2. Check whether the number of bits of the message exceeds the number of pixels of the selected image
                 2.1 If so, raise Exception
-            3. Change the color value for red:
+            3. Change the lsb of the color value for red:
                 - Color value XOR 1 -> Bit of secret message at position px equals '1'  (change value)
                 - Color value XOR 0 -> Bit of secret message at position px equals '0'  (do not change value)
             4. Save/Write the new image
