@@ -8,8 +8,9 @@ def start_stegano(in_file: str, out_file: str, hide: bool, message: bytes = None
     from libStegano import SteganoWriter
 
     if hide:
-        stegano_writer = SteganoWriter(in_file, out_file)
+        stegano_writer = SteganoWriter(in_file)
         stegano_writer.place_secret_message(message)
+        stegano_writer.save(out_file)
     else:
         stegano_reader = SteganoReader(in_file, out_file)
         stegano_reader.extract_secret_message()

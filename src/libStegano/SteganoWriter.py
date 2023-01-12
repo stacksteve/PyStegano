@@ -4,7 +4,7 @@ from utils import read_image, write_image
 
 
 class SteganoWriter(Stegano):
-    def __init__(self, original_image_path: str, stegano_image_path: str):
+    def __init__(self, original_image_path: str):
         """
         Read image data and store filename for later use in place_secret_message.
 
@@ -12,7 +12,6 @@ class SteganoWriter(Stegano):
         :param stegano_image_path: Secret message will be placed in this image.
         """
         self.__pil_image, self.__image_data = read_image(original_image_path)
-        self.__out_file_name = stegano_image_path
 
     def place_secret_message(self, secret_message: bytes, public_key_receiver=None, private_key_sender=None) -> None:
         """
@@ -28,7 +27,7 @@ class SteganoWriter(Stegano):
         :param private_key_sender: EdDSA private key to sign the message
         :param secret_message: Plaintext secret message
         :param public_key_receiver: RSA public key to encrypt the symmetric key
-        :return: Method does not return anything
+        :return: None
         """
         secret_message_bin = self.__convert_to_binary(secret_message, public_key_receiver, private_key_sender)
         full_secret_message = ''.join([secret_message_bin, self.END_FLAG_BIN])
@@ -36,7 +35,15 @@ class SteganoWriter(Stegano):
             raise ValueError('The image you selected is too small to store the secret message.')
         for px in range(len(full_secret_message)):
             self.__image_data[px] = self.__lsb_flipper(px, int(full_secret_message[px]))
-        write_image(self.__image_data, self.__pil_image, self.__out_file_name)
+
+    def save(self, out_file_name) -> None:
+        """
+        Method to save the stegano image.
+
+        :param out_file_name: Name of the stegano image
+        :return: None
+        """
+        write_image(self.__image_data, self.__pil_image, out_file_name)
 
     def __convert_to_binary(self, secret_message: bytes, public_key_receiver, private_key_sender) -> str:
         """
